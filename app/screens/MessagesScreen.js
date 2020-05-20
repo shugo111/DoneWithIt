@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, FlatList, View } from "react-native";
-import ListItem from "../components/ListItem";
+import { FlatList, StyleSheet, View } from "react-native";
+
 import Screen from "../components/Screen";
-import ListItemSeperator from "../components/ListItemSeperator";
-import colors from "../config/colors";
-import ListItemDelete from "../components/ListItemDelete";
+import {
+  ListItem,
+  ListItemDeleteAction,
+  ListItemSeparator,
+} from "../components/lists";
 
 const initialMessages = [
   {
@@ -19,37 +21,34 @@ const initialMessages = [
     description: "D2",
     image: require("../assets/mosh.jpg"),
   },
-  {
-    id: 3,
-    title: "T3",
-    description: "D3",
-    image: require("../assets/mosh.jpg"),
-  },
 ];
 
-const MessagesScreen = (props) => {
+function MessagesScreen(props) {
   const [messages, setMessages] = useState(initialMessages);
   const [refreshing, setRefreshing] = useState(false);
-  const handledelete = (message) => {
+
+  const handleDelete = (message) => {
+    // Delete the message from messages
     setMessages(messages.filter((m) => m.id !== message.id));
   };
+
   return (
     <Screen>
       <FlatList
         data={messages}
-        keyExtractor={(message) => message.id.toString}
+        keyExtractor={(message) => message.id.toString()}
         renderItem={({ item }) => (
           <ListItem
             title={item.title}
             subTitle={item.description}
             image={item.image}
-            onPress={() => console.log("message selected", item)}
+            onPress={() => console.log("Message selected", item)}
             renderRightActions={() => (
-              <ListItemDelete onPress={() => handledelete(item)} />
+              <ListItemDeleteAction onPress={() => handleDelete(item)} />
             )}
           />
         )}
-        ItemSeparatorComponent={ListItemSeperator}
+        ItemSeparatorComponent={ListItemSeparator}
         refreshing={refreshing}
         onRefresh={() => {
           setMessages([
@@ -64,8 +63,8 @@ const MessagesScreen = (props) => {
       />
     </Screen>
   );
-};
-
-export default MessagesScreen;
+}
 
 const styles = StyleSheet.create({});
+
+export default MessagesScreen;
